@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-client.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-client.iml" group="chat-client" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-client/chat-client_main.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-client/chat-client_main.iml" group="chat-client" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-client/chat-client_test.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-client/chat-client_test.iml" group="chat-client" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-common.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-common.iml" group="chat-common" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-common/chat-common_main.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-common/chat-common_main.iml" group="chat-common" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-common/chat-common_test.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-common/chat-common_test.iml" group="chat-common" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-room.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-room.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-room_main.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-room_main.iml" group="chat-room" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-room_test.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-room_test.iml" group="chat-room" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-server.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-server.iml" group="chat-server" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-server/chat-server_main.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-server/chat-server_main.iml" group="chat-server" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-server/chat-server_test.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-server/chat-server_test.iml" group="chat-server" />
+    </modules>
+  </component>
+</project>
