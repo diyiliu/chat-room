@@ -28,12 +28,24 @@ public class SpringConfiguration {
 
 
     /**
-     * 客户端缓存
+     * 在线客户端
      *
      * @return
      */
     @Bean
     public ICache onlineCacheProvider() {
+
+        return new RamCacheProvider();
+    }
+
+
+    /**
+     * 客户端缓存
+     *
+     * @return
+     */
+    @Bean
+    public ICache clientCacheProvider() {
 
         return new RamCacheProvider();
     }

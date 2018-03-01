@@ -11,5 +11,11 @@ public class TestMain {
     public void test(){
         System.out.println(System.lineSeparator().equals("\\t"));
 
+
+        String str = "abc^123456";
+
+        System.out.println(str.split("\\^")[0]);
+
+        System.out.println(str.startsWith("abc^"));
     }
 }

@@ -2,6 +2,8 @@ package com.diyiliu.client.support.ui;
 
 import com.diyiliu.common.util.UIHepler;
 
+import javax.swing.*;
+
 /**
  * Description: ClientUI
  * Author: DIYILIU
@@ -193,7 +195,7 @@ public class ClientUI extends javax.swing.JFrame {
     // End of variables declaration
 
 
-    public String getAccount() {
-        return account;
+    public JList<String> getLtUser() {
+        return ltUser;
     }
 }
