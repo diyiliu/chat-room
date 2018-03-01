@@ -3,6 +3,7 @@ package com.diyiliu.server.support.ui;
 import com.diyiliu.common.util.UIHepler;
 import com.diyiliu.server.netty.ChatServer;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
@@ -38,7 +39,7 @@ public class ServerUI extends javax.swing.JFrame {
         tfPort = new javax.swing.JTextField();
         btnOperator = new javax.swing.JButton();
         sclpn = new javax.swing.JScrollPane();
-        jList = new javax.swing.JList<>();
+        ltUser = new javax.swing.JList<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("服务器");
@@ -56,6 +57,8 @@ public class ServerUI extends javax.swing.JFrame {
             String text = btnOperator.getText();
             if ("启动".equals(text)){
                 server = new ChatServer();
+                server.setServerUI(this);
+
                 int port = Integer.parseInt(tfPort.getText().trim());
                 server.setPort(port);
                 server.start();
@@ -70,8 +73,8 @@ public class ServerUI extends javax.swing.JFrame {
         });
 
         sclpn.setBorder(null);
-        jList.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "在线列表", 0, 0, new java.awt.Font("隶书", 0, 12))); // NOI18N
-        jList.setModel(new javax.swing.AbstractListModel<String>() {
+        ltUser.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "在线列表", 0, 0, new java.awt.Font("隶书", 0, 12))); // NOI18N
+        ltUser.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = {};
 
             public int getSize() {
@@ -82,7 +85,7 @@ public class ServerUI extends javax.swing.JFrame {
                 return strings[i];
             }
         });
-        sclpn.setViewportView(jList);
+        sclpn.setViewportView(ltUser);
 
         javax.swing.GroupLayout pnMainLayout = new javax.swing.GroupLayout(pnMain);
         pnMain.setLayout(pnMainLayout);
@@ -169,7 +172,7 @@ public class ServerUI extends javax.swing.JFrame {
 
     // Variables declaration - do not modify
     private javax.swing.JButton btnOperator;
-    private javax.swing.JList<String> jList;
+    private javax.swing.JList<String> ltUser;
     private javax.swing.JLabel lbPort;
     private javax.swing.JPanel pnMain;
     private javax.swing.JScrollPane sclpn;
@@ -180,6 +183,10 @@ public class ServerUI extends javax.swing.JFrame {
         java.awt.EventQueue.invokeLater(() ->
                 this.setVisible(true)
         );
+    }
+
+    public JList<String> getLtUser() {
+        return ltUser;
     }
 }
 

@@ -9,6 +9,8 @@ import java.awt.event.ActionEvent;
 
 public class LoginUI extends javax.swing.JFrame {
 
+    private ChatClient client;
+
     /**
      * Creates new form LoginUI
      */
@@ -32,13 +34,14 @@ public class LoginUI extends javax.swing.JFrame {
         lbHost = new javax.swing.JLabel();
         lbPort = new javax.swing.JLabel();
         lbAccount = new javax.swing.JLabel();
-        tfHost = new javax.swing.JTextField();
-        tfPort = new javax.swing.JTextField();
+        tfHost = new javax.swing.JTextField("192.168.10.10");
+        tfPort = new javax.swing.JTextField("8888");
         tfAccount = new javax.swing.JTextField();
         lbTitle = new javax.swing.JLabel();
         btnLogin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
         setTitle("登录主机");
         setResizable(false);
 
@@ -71,18 +74,16 @@ public class LoginUI extends javax.swing.JFrame {
                 return;
             }
             ClientUI clientUI = new ClientUI(account);
-
-            ChatClient client = new ChatClient();
+            client = new ChatClient();
             client.setHost(host);
             client.setPort(Integer.parseInt(port));
             client.setAccount(account);
             client.setClientUI(clientUI);
-
             client.start();
 
             EventQueue.invokeLater(() -> {
-                while (true) {
-                    if (client.isRunning()) {
+                while (client.isWaiting()) {
+                    if (client.isJoining()) {
                         clientUI.setVisible(true);
 
                         this.dispose();

@@ -67,6 +67,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     private void refreshUserList(List<String> list){
         String[] strings = list.toArray(new String[]{});
 
+        logger.info("用户列表:" + JacksonUtil.toJson(strings));
         clientUI.getLtUser().setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }

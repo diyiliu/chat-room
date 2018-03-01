@@ -1,15 +1,17 @@
 package com.diyiliu.server.netty;
 
+import com.diyiliu.common.thread.ChannelThread;
 import com.diyiliu.server.netty.handler.ServerHandler;
+import com.diyiliu.server.support.ui.ServerUI;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.*;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
+import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Description: ChatServer
@@ -17,18 +19,11 @@ import org.slf4j.LoggerFactory;
  * Update: 2018-03-01 13:07
  */
 
-public class ChatServer extends Thread{
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
+public class ChatServer extends ChannelThread{
     // 端口号
     private int port;
 
-    private  ChannelFuture future;
-
-    public void init(){
-
-        this.start();
-    }
+    private ServerUI serverUI;
 
     @Override
     public void run() {
@@ -48,7 +43,7 @@ public class ChatServer extends Thread{
 
                             ch.pipeline().addLast(new LineBasedFrameDecoder(1024))
                                     .addLast(new StringDecoder())
-                                    .addLast(new ServerHandler());
+                                    .addLast(new ServerHandler(serverUI));
                         }
                     });
 
@@ -69,13 +64,7 @@ public class ChatServer extends Thread{
         this.port = port;
     }
 
-    /**
-     * 关闭连接
-     */
-    public void shutdown(){
-        Channel channel = future.channel();
-        if (channel.isActive()){
-            channel.close();
-        }
+    public void setServerUI(ServerUI serverUI) {
+        this.serverUI = serverUI;
     }
 }

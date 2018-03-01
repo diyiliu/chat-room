@@ -2,6 +2,7 @@ package com.diyiliu.client.netty;
 
 import com.diyiliu.client.netty.handler.ClientHandler;
 import com.diyiliu.client.support.ui.ClientUI;
+import com.diyiliu.common.thread.ChannelThread;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -21,20 +22,17 @@ import org.slf4j.LoggerFactory;
  * Author: DIYILIU
  * Update: 2018-03-01 13:24
  */
-public class ChatClient extends Thread {
-    private Logger logger = LoggerFactory.getLogger(this.getClass());
-
+public class ChatClient extends ChannelThread {
     private String host;
     private int port;
 
     private String account;
     private ClientUI clientUI;
 
-
     // 重连次数
-    private int reconnect;
+    private int reconnect = 0;
 
-    private boolean isRunning = false;
+
 
     @Override
     public void run() {
@@ -47,7 +45,7 @@ public class ChatClient extends Thread {
 
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
-                .option(ChannelOption.TCP_NODELAY, true)
+                //.option(ChannelOption.TCP_NODELAY, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) {
@@ -60,19 +58,18 @@ public class ChatClient extends Thread {
                 });
 
         try {
-            ChannelFuture future = bootstrap.connect(host, port).sync();
+            future = bootstrap.connect(host, port).sync();
             logger.info("客户端启动...");
-            isRunning = true;
             reconnect = 0;
+
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             group.shutdownGracefully();
-            isRunning = false;
             if (reconnect > 2) {
                 logger.warn("客户端重连失败！");
-                if (clientUI.isActive()){
+                if (clientUI.isShowing()){
                     clientUI.dispose();
                 }
                 return;
@@ -110,7 +107,28 @@ public class ChatClient extends Thread {
      *
      * @return
      */
-    public boolean isRunning() {
-        return isRunning;
+    public boolean isJoining(){
+        if (future == null || !future.channel().isActive()){
+
+            return false;
+        }
+
+        return true;
     }
+
+    /**
+     * 是否继续等待
+     *
+     * @return
+     */
+    public boolean isWaiting() {
+        if (reconnect < 3 ){
+
+            return true;
+        }
+
+        return false;
+    }
+
+
 }
