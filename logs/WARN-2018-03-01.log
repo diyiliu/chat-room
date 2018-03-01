@@ -267,3 +267,6 @@ io.netty.util.IllegalReferenceCountException: refCnt: 0, increment: 1
 [WARN ] [2018-03-01 19:35:18] com.diyiliu.client.netty.ChatClient [68] - 客户端重连失败！
 [WARN ] [2018-03-01 19:47:09] com.diyiliu.client.netty.ChatClient [69] - 客户端重连失败！
 [WARN ] [2018-03-01 20:10:07] com.diyiliu.client.netty.ChatClient [69] - 客户端重连失败！
+[WARN ] [2018-03-01 22:33:40] com.diyiliu.client.netty.ChatClient [71] - 客户端重连失败！
+[WARN ] [2018-03-01 22:39:02] com.diyiliu.client.netty.ChatClient [71] - 客户端重连失败！
+[WARN ] [2018-03-01 22:39:42] com.diyiliu.client.netty.ChatClient [71] - 客户端重连失败！

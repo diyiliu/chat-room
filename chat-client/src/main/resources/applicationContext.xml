@@ -11,5 +11,5 @@
     <context:component-scan base-package="com.diyiliu.*"/>
     <context:property-placeholder location="classpath:config.properties"/>
 
-    <bean class="com.diyiliu.client.support.ui.LoginUI" init-method="init"/>
+    <bean id="loginUI" class="com.diyiliu.client.support.ui.LoginUI" init-method="init"/>
 </beans>

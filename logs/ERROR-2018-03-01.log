@@ -36,3 +36,9 @@
 [ERROR] [2018-03-01 20:30:33] com.diyiliu.client.netty.handler.ClientHandler[58] - 客户端异常[远程主机强迫关闭了一个现有的连接。]!
 [ERROR] [2018-03-01 20:30:33] com.diyiliu.client.netty.handler.ClientHandler[58] - 客户端异常[远程主机强迫关闭了一个现有的连接。]!
 [ERROR] [2018-03-01 20:30:33] com.diyiliu.client.netty.handler.ClientHandler[58] - 客户端异常[远程主机强迫关闭了一个现有的连接。]!
+[ERROR] [2018-03-01 20:33:41] com.diyiliu.server.netty.handler.ServerHandler[78] - 服务器异常[远程主机强迫关闭了一个现有的连接。]!
+[ERROR] [2018-03-01 20:33:42] com.diyiliu.client.netty.handler.ClientHandler[58] - 客户端异常[远程主机强迫关闭了一个现有的连接。]!
+[ERROR] [2018-03-01 20:33:42] com.diyiliu.client.netty.handler.ClientHandler[58] - 客户端异常[远程主机强迫关闭了一个现有的连接。]!
+[ERROR] [2018-03-01 22:32:21] com.diyiliu.server.netty.handler.ServerHandler[78] - 服务器异常[远程主机强迫关闭了一个现有的连接。]!
+[ERROR] [2018-03-01 22:32:24] com.diyiliu.server.netty.handler.ServerHandler[78] - 服务器异常[远程主机强迫关闭了一个现有的连接。]!
+[ERROR] [2018-03-01 22:40:00] com.diyiliu.client.netty.handler.ClientHandler[58] - 客户端异常[远程主机强迫关闭了一个现有的连接。]!

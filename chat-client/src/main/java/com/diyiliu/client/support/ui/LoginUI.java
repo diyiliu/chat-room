@@ -85,8 +85,8 @@ public class LoginUI extends javax.swing.JFrame {
                 while (client.isWaiting()) {
                     if (client.isJoining()) {
                         clientUI.setVisible(true);
+                        this.setVisible(false);
 
-                        this.dispose();
                         break;
                     }
                     try {

@@ -2,7 +2,9 @@ package com.diyiliu.client.netty;
 
 import com.diyiliu.client.netty.handler.ClientHandler;
 import com.diyiliu.client.support.ui.ClientUI;
+import com.diyiliu.client.support.ui.LoginUI;
 import com.diyiliu.common.thread.ChannelThread;
+import com.diyiliu.common.util.SpringUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -31,8 +33,6 @@ public class ChatClient extends ChannelThread {
 
     // 重连次数
     private int reconnect = 0;
-
-
 
     @Override
     public void run() {
@@ -72,6 +72,12 @@ public class ChatClient extends ChannelThread {
                 if (clientUI.isShowing()){
                     clientUI.dispose();
                 }
+
+                LoginUI loginUI = SpringUtil.getBean("loginUI");
+                if (!loginUI.isShowing()){
+                    loginUI.setVisible(true);
+                }
+
                 return;
             }
 
