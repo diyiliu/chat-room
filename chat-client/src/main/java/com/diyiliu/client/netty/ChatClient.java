@@ -1,6 +1,7 @@
 package com.diyiliu.client.netty;
 
 import com.diyiliu.client.netty.handler.ClientHandler;
+import com.diyiliu.client.support.ui.ClientUI;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -26,8 +27,14 @@ public class ChatClient extends Thread {
     private String host;
     private int port;
 
+    private String account;
+    private ClientUI clientUI;
+
+
     // 重连次数
     private int reconnect;
+
+    private boolean isRunning = false;
 
     @Override
     public void run() {
@@ -42,28 +49,32 @@ public class ChatClient extends Thread {
                 .channel(NioSocketChannel.class)
                 .option(ChannelOption.TCP_NODELAY, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
-
                     @Override
                     protected void initChannel(SocketChannel ch) {
 
                         ch.pipeline().addLast(new LineBasedFrameDecoder(1024))
                                 .addLast(new StringDecoder())
                                 .addLast(new IdleStateHandler(0, 40, 0))
-                                .addLast(new ClientHandler());
+                                .addLast(new ClientHandler(account, clientUI));
                     }
                 });
 
         try {
             ChannelFuture future = bootstrap.connect(host, port).sync();
             logger.info("客户端启动...");
+            isRunning = true;
             reconnect = 0;
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             group.shutdownGracefully();
-            if (reconnect > 3) {
+            isRunning = false;
+            if (reconnect > 2) {
                 logger.warn("客户端重连失败！");
+                if (clientUI.isActive()){
+                    clientUI.dispose();
+                }
                 return;
             }
 
@@ -84,5 +95,22 @@ public class ChatClient extends Thread {
 
     public void setPort(int port) {
         this.port = port;
+    }
+
+    public void setAccount(String account) {
+        this.account = account;
+    }
+
+    public void setClientUI(ClientUI clientUI) {
+        this.clientUI = clientUI;
+    }
+
+    /**
+     * 是否启动成功
+     *
+     * @return
+     */
+    public boolean isRunning() {
+        return isRunning;
     }
 }

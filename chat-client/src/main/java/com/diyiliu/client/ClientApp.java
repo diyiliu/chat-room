@@ -1,6 +1,6 @@
 package com.diyiliu.client;
 
-import com.diyiliu.client.netty.ChatClient;
+import com.diyiliu.common.util.SpringUtil;
 
 /**
  * Description: ClientApp
@@ -10,10 +10,7 @@ import com.diyiliu.client.netty.ChatClient;
 public class ClientApp {
 
     public static void main(String[] args) {
-        ChatClient client = new ChatClient();
-        client.setHost("192.168.1.132");
-        client.setPort(8888);
 
-        client.start();
+        SpringUtil.init();
     }
 }

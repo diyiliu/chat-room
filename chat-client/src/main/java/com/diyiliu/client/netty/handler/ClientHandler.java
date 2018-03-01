@@ -1,5 +1,6 @@
 package com.diyiliu.client.netty.handler;
 
+import com.diyiliu.client.support.ui.ClientUI;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
@@ -15,14 +16,19 @@ import org.slf4j.LoggerFactory;
 public class ClientHandler extends ChannelInboundHandlerAdapter {
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    private String user;
+    private String account;
+    private ClientUI clientUI;
+
+
+    public ClientHandler(String account, ClientUI clientUI) {
+        this.account = account;
+        this.clientUI = clientUI;
+    }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         logger.info("已连接服务器...");
-
-        user = "diyiliu";
-        String msg = "[user]:" + user + "$" + System.lineSeparator();
+        String msg = "[user]:" + account + "$" + System.lineSeparator();
 
         ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes());
         ctx.writeAndFlush(byteBuf);
