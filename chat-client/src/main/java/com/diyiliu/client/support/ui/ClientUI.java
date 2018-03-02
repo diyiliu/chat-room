@@ -1,6 +1,7 @@
 package com.diyiliu.client.support.ui;
 
 import com.diyiliu.common.util.UIHepler;
+import org.springframework.stereotype.Component;
 
 import javax.swing.*;
 
@@ -9,6 +10,8 @@ import javax.swing.*;
  * Author: DIYILIU
  * Update: 2018-03-01 16:25
  */
+
+@Component
 public class ClientUI extends javax.swing.JFrame {
 
     private String account;
@@ -197,5 +200,9 @@ public class ClientUI extends javax.swing.JFrame {
 
     public JList<String> getLtUser() {
         return ltUser;
+    }
+
+    public JLabel getLbAccount() {
+        return lbAccount;
     }
 }

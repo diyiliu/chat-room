@@ -3,6 +3,7 @@ package com.diyiliu.server.netty.handler;
 import com.diyiliu.common.cache.ICache;
 import com.diyiliu.common.util.JacksonUtil;
 import com.diyiliu.common.util.SpringUtil;
+import com.diyiliu.server.support.model.ClientPipeline;
 import com.diyiliu.server.support.ui.ServerUI;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -13,8 +14,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Description: ServerHandler
@@ -29,19 +32,18 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     private ICache onlineCacheProvider;
 
-    private ICache clientCacheProvider;
-
     public ServerHandler(ServerUI serverUI) {
         this.serverUI = serverUI;
 
         onlineCacheProvider = SpringUtil.getBean("onlineCacheProvider");
-        clientCacheProvider = SpringUtil.getBean("clientCacheProvider");
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         String host = ctx.channel().remoteAddress().toString().trim().replaceFirst("/", "");
         logger.info("[{}]建立连接...", host);
+
+        onlineCacheProvider.put(host, new ClientPipeline(ctx));
 
         // 断开连接
         ctx.channel().closeFuture().addListener(
@@ -66,7 +68,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             String user = strArr[1].replace("$", "");
 
             String host = ctx.channel().remoteAddress().toString().trim().replaceFirst("/", "");
-            join(host, user, ctx);
+            join(host, user);
 
             return;
         }
@@ -82,14 +84,19 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     private void refreshUserList() {
         Set userSet = onlineCacheProvider.getKeys();
 
-        List<String> list = new ArrayList();
+        List<ClientPipeline> list = new ArrayList();
         userSet.forEach(e -> {
-            String user = (String) onlineCacheProvider.get(e);
-            list.add(user);
+            ClientPipeline pipeline = (ClientPipeline) onlineCacheProvider.get(e);
+            if (pipeline.isOnline()){
+                list.add(pipeline);
+            }
         });
 
-        String[] strings = list.toArray(new String[list.size()]);
+        List<String> userList = list.stream()
+                .sorted(Comparator.comparing(ClientPipeline::getDatetime))
+                .map(ClientPipeline::getUser).collect(Collectors.toList());
 
+        String[] strings = userList.toArray(new String[userList.size()]);
         serverUI.getLtUser().setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() {
                 return strings.length;
@@ -100,32 +107,33 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             }
         });
 
-        Set set = clientCacheProvider.getKeys();
-        String jsonList = JacksonUtil.toJson(list);
+        String jsonList = JacksonUtil.toJson(userList);
         String msg = "[list]^" + jsonList + "$" + System.lineSeparator();
 
-        set.forEach(e -> {
-            ChannelHandlerContext ctx = (ChannelHandlerContext) clientCacheProvider.get(e);
+        userSet.forEach(e -> {
+            ClientPipeline pipeline = (ClientPipeline) onlineCacheProvider.get(e);
+            if (pipeline.isOnline()){
+                ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes());
+                pipeline.getContext().writeAndFlush(byteBuf);
 
-            System.out.println(e + ":" + msg);
-
-            ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes());
-            ctx.writeAndFlush(byteBuf);
+                logger.info("广播列表[{}:{}]", e, jsonList);
+            }else {
+                logger.warn("[{}]未注册!", e);
+            }
         });
     }
 
     /**
-     * 加入缓存
+     * 注册在线
      *
      * @param host
      * @param user
-     * @param ctx
      */
-    public void join(String host, String user, ChannelHandlerContext ctx) {
+    public void join(String host, String user) {
         synchronized (onlineCacheProvider) {
-            onlineCacheProvider.put(host, user);
-            clientCacheProvider.put(host, ctx);
-
+            ClientPipeline pipeline = (ClientPipeline) onlineCacheProvider.get(host);
+            pipeline.setUser(user);
+            pipeline.setOnline(true);
             refreshUserList();
         }
     }
@@ -138,7 +146,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public void remove(String host) {
         synchronized (onlineCacheProvider) {
             onlineCacheProvider.remove(host);
-            clientCacheProvider.remove(host);
         }
     }
 }

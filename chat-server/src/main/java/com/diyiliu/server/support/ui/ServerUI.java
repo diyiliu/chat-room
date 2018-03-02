@@ -62,11 +62,14 @@ public class ServerUI extends javax.swing.JFrame {
                 int port = Integer.parseInt(tfPort.getText().trim());
                 server.setPort(port);
                 server.start();
+                tfPort.setEnabled(false);
 
                 btnOperator.setText("停止");
             }else {
                 if (server != null){
                     server.shutdown();
+                    tfPort.setEnabled(true);
+
                     btnOperator.setText("启动");
                 }
             }

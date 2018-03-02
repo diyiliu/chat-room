@@ -6,9 +6,7 @@ import com.diyiliu.client.support.ui.LoginUI;
 import com.diyiliu.common.thread.ChannelThread;
 import com.diyiliu.common.util.SpringUtil;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
@@ -16,8 +14,6 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
 import io.netty.handler.timeout.IdleStateHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Description: ChatClient
@@ -29,10 +25,20 @@ public class ChatClient extends ChannelThread {
     private int port;
 
     private String account;
+
     private ClientUI clientUI;
+    private LoginUI loginUI;
 
     // 重连次数
     private int reconnect = 0;
+    // 最大重连次数
+    private final static int MAX_REC_TIME = 3;
+
+
+    public ChatClient() {
+        loginUI = SpringUtil.getBean("loginUI");
+        clientUI = SpringUtil.getBean("clientUI");
+    }
 
     @Override
     public void run() {
@@ -59,36 +65,32 @@ public class ChatClient extends ChannelThread {
 
         try {
             future = bootstrap.connect(host, port).sync();
-            logger.info("客户端启动...");
-            reconnect = 0;
-
+            refreshUI();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } finally {
             group.shutdownGracefully();
-            if (reconnect > 2) {
-                logger.warn("客户端重连失败！");
-                if (clientUI.isShowing()){
-                    clientUI.dispose();
+            if (reconnect < MAX_REC_TIME ) {
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
 
-                LoginUI loginUI = SpringUtil.getBean("loginUI");
-                if (!loginUI.isShowing()){
-                    loginUI.setVisible(true);
-                }
-
+                logger.info("客户端, 尝试第{}次重连...", ++reconnect);
+                connectServer(host, port);
                 return;
             }
+            logger.warn("客户端重连失败！");
 
-            try {
-                Thread.sleep(10000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+            if (clientUI.isShowing()){
+                clientUI.dispose();
             }
 
-            logger.info("客户端, 尝试第{}次重连...", ++reconnect);
-            connectServer(host, port);
+            if (!loginUI.isShowing()){
+                loginUI.setVisible(true);
+            }
         }
     }
 
@@ -104,37 +106,17 @@ public class ChatClient extends ChannelThread {
         this.account = account;
     }
 
-    public void setClientUI(ClientUI clientUI) {
-        this.clientUI = clientUI;
-    }
-
     /**
-     * 是否启动成功
-     *
-     * @return
+     * 连接服务成功
      */
-    public boolean isJoining(){
-        if (future == null || !future.channel().isActive()){
+    public void refreshUI(){
+        logger.info("客户端启动...");
+        reconnect = 0;
 
-            return false;
+        clientUI.getLbAccount().setText(account);
+        clientUI.setVisible(true);
+        if (loginUI.isShowing()){
+            loginUI.setVisible(false);
         }
-
-        return true;
     }
-
-    /**
-     * 是否继续等待
-     *
-     * @return
-     */
-    public boolean isWaiting() {
-        if (reconnect < 3 ){
-
-            return true;
-        }
-
-        return false;
-    }
-
-
 }

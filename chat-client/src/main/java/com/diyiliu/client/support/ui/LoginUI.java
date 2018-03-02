@@ -4,12 +4,9 @@ import com.diyiliu.client.netty.ChatClient;
 import com.diyiliu.common.util.UIHepler;
 import org.apache.commons.lang3.StringUtils;
 
-import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class LoginUI extends javax.swing.JFrame {
-
-    private ChatClient client;
 
     /**
      * Creates new form LoginUI
@@ -34,7 +31,7 @@ public class LoginUI extends javax.swing.JFrame {
         lbHost = new javax.swing.JLabel();
         lbPort = new javax.swing.JLabel();
         lbAccount = new javax.swing.JLabel();
-        tfHost = new javax.swing.JTextField("192.168.10.10");
+        tfHost = new javax.swing.JTextField("127.0.0.1");
         tfPort = new javax.swing.JTextField("8888");
         tfAccount = new javax.swing.JTextField();
         lbTitle = new javax.swing.JLabel();
@@ -73,29 +70,12 @@ public class LoginUI extends javax.swing.JFrame {
 
                 return;
             }
-            ClientUI clientUI = new ClientUI(account);
-            client = new ChatClient();
+
+            ChatClient client = new ChatClient();
             client.setHost(host);
             client.setPort(Integer.parseInt(port));
             client.setAccount(account);
-            client.setClientUI(clientUI);
             client.start();
-
-            EventQueue.invokeLater(() -> {
-                while (client.isWaiting()) {
-                    if (client.isJoining()) {
-                        clientUI.setVisible(true);
-                        this.setVisible(false);
-
-                        break;
-                    }
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e1) {
-                        e1.printStackTrace();
-                    }
-                }
-            });
         });
 
         javax.swing.GroupLayout pnMainLayout = new javax.swing.GroupLayout(pnMain);
