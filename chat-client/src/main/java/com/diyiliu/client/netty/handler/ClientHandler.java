@@ -112,13 +112,13 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     private void refreshHistoryMsg(ClientMsg msg) {
         ClientMsg lastMsg = Constant.MSG_LINKED_DEQUE.peek();
 
+        // 100 条消息记录
         Constant.MSG_LINKED_DEQUE.add(msg);
         if (Constant.MSG_LINKED_DEQUE.size() > 100) {
             Constant.MSG_LINKED_DEQUE.poll();
         }
 
         JTextPane textPane = clientUI.getTpContent();
-        textPane.setContentType("text/html");
 
         try {
             if (lastMsg != null) {
@@ -136,9 +136,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
                 showContent(textPane, msg.getUser(), Color.GRAY, 14, StyleConstants.ALIGN_LEFT, 0);
                 showContent(textPane, msg.getContent(), Color.DARK_GRAY, 16, StyleConstants.ALIGN_LEFT, 20);
             }
-
-            JScrollBar scrollBar = clientUI.getSclPnContent().getVerticalScrollBar();
-            scrollBar.setValue(scrollBar.getMaximum());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,6 +148,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         StyleConstants.setForeground(attributeSet, color);
         StyleConstants.setFontSize(attributeSet, fontSize);
         StyleConstants.setAlignment(attributeSet, align);
+        //textPane.setParagraphAttributes(attributeSet, true);
 
         if (indent > 0) {
             if (align == StyleConstants.ALIGN_RIGHT) {
@@ -163,6 +161,9 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
         Document document = textPane.getDocument();
         document.insertString(document.getLength(), msg + System.lineSeparator(), attributeSet);
+
+        // 设置滚动条始终到最底部
+        textPane.select(document.getLength(), document.getLength());
     }
 
     /**

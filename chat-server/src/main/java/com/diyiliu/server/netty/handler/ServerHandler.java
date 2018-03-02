@@ -127,17 +127,18 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         broadcast(jsonList, 0);
     }
 
-    public void broadcast(String message, int type) {
+    public void broadcast(String content, int type) {
         Set userSet = onlineCacheProvider.getKeys();
 
+        String message = "";
         switch (type) {
             case 0:
 
-                message = "[list]^" + message;
+                message = "[list]^" + content;
                 break;
             case 1:
 
-                message = "[message]^" + message;
+                message = "[message]^" + content;
                 break;
             default:
         }
@@ -150,7 +151,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
                 ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes());
                 pipeline.getContext().writeAndFlush(byteBuf);
 
-                logger.info("广播消息[{}:{}]", e, "...");
+                logger.info("广播消息[{}:{}]", e, content);
             }else {
                 logger.warn("[{}]未注册!", e);
             }

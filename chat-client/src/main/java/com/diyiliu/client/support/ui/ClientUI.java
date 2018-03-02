@@ -8,6 +8,14 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
+import javax.swing.text.Element;
+import javax.swing.text.View;
+import javax.swing.text.ViewFactory;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.InlineView;
+import javax.swing.text.html.ParagraphView;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Description: ClientUI
@@ -18,7 +26,7 @@ import javax.swing.*;
 @Component
 public class ClientUI extends javax.swing.JFrame {
 
-    private ChannelHandlerContext  context;
+    private ChannelHandlerContext context;
 
     /**
      * Creates new form ClientUI
@@ -27,14 +35,9 @@ public class ClientUI extends javax.swing.JFrame {
         UIHepler.beautify("Nimbus");
         initComponents();
 
-        UIHepler.setCenter(this);
-    }
+        // 修复英文换行bug
+        fixEnLineBreak();
 
-    public ClientUI(String account) {
-        UIHepler.beautify("Nimbus");
-        initComponents();
-
-        lbAccount.setText(account);
         UIHepler.setCenter(this);
     }
 
@@ -95,9 +98,12 @@ public class ClientUI extends javax.swing.JFrame {
         btnSend.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnSend.addActionListener((actionEvent) -> {
             String text = taInput.getText().trim();
-            if (StringUtils.isNotBlank(text)){
+            if (StringUtils.isNotBlank(text)) {
+                String[] lines = text.split("\\r?\\n");
                 // 发送数据
-                sendToServer(text);
+                for (String l: lines){
+                    sendToServer(l);
+                }
                 taInput.setText("");
             }
         });
@@ -220,11 +226,65 @@ public class ClientUI extends javax.swing.JFrame {
     }
 
     /**
+     * 修复英文换行
+     */
+    private void fixEnLineBreak() {
+        tpContent.setContentType("text/html");
+        tpContent.setEditorKit(new HTMLEditorKit() {
+            @Override
+            public ViewFactory getViewFactory() {
+
+                return new HTMLFactory() {
+                    public View create(Element e) {
+                        View v = super.create(e);
+                        if (v instanceof InlineView) {
+                            return new InlineView(e) {
+                                public int getBreakWeight(int axis, float pos, float len) {
+                                    return GoodBreakWeight;
+                                }
+
+                                public View breakView(int axis, int p0, float pos, float len) {
+                                    if (axis == View.X_AXIS) {
+                                        checkPainter();
+                                        int p1 = getGlyphPainter().getBoundedPosition(this, p0, pos, len);
+                                        if (p0 == getStartOffset() && p1 == getEndOffset()) {
+                                            return this;
+                                        }
+                                        return createFragment(p0, p1);
+                                    }
+                                    return this;
+                                }
+                            };
+                        } else if (v instanceof ParagraphView) {
+                            return new ParagraphView(e) {
+                                protected SizeRequirements calculateMinorAxisRequirements(int axis, SizeRequirements r) {
+                                    if (r == null) {
+                                        r = new SizeRequirements();
+                                    }
+                                    float pref = layoutPool.getPreferredSpan(axis);
+                                    float min = layoutPool.getMinimumSpan(axis);
+                                    // Don't include insets, Box.getXXXSpan will include them.
+                                    r.minimum = (int) min;
+                                    r.preferred = Math.max(r.minimum, (int) pref);
+                                    r.maximum = Integer.MAX_VALUE;
+                                    r.alignment = 0.5f;
+                                    return r;
+                                }
+                            };
+                        }
+                        return v;
+                    }
+                };
+            }
+        });
+    }
+
+    /**
      * 发送数据到服务器
      *
      * @param message
      */
-    public void sendToServer(String message){
+    public void sendToServer(String message) {
         String msg = "[message]^" + message + "$" + System.lineSeparator();
         ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes());
 
