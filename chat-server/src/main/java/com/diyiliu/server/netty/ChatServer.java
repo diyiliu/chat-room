@@ -19,7 +19,7 @@ import io.netty.handler.codec.string.StringDecoder;
  * Update: 2018-03-01 13:07
  */
 
-public class ChatServer extends ChannelThread{
+public class ChatServer extends ChannelThread {
     // 端口号
     private int port;
 
@@ -39,7 +39,7 @@ public class ChatServer extends ChannelThread{
                     .childHandler(new ChannelInitializer<SocketChannel>() {
 
                         @Override
-                        protected void initChannel(SocketChannel ch)  {
+                        protected void initChannel(SocketChannel ch) {
 
                             ch.pipeline().addLast(new LineBasedFrameDecoder(1024))
                                     .addLast(new StringDecoder())
@@ -49,7 +49,7 @@ public class ChatServer extends ChannelThread{
 
             future = b.bind(port).sync();
 
-            logger.info("服务器启动...");
+            logger.info("服务器启动[{}]...", port);
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();

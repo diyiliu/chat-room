@@ -11,6 +11,6 @@ public class ServerApp {
 
     public static void main(String[] args) {
 
-        SpringUtil.init();
+        SpringUtil.init("applicationContext.xml");
     }
 }

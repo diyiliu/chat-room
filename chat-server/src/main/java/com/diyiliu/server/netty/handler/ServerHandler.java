@@ -112,6 +112,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
                 .sorted(Comparator.comparing(ClientPipeline::getDatetime))
                 .map(ClientPipeline::getUser).collect(Collectors.toList());
 
+/*
         String[] strings = userList.toArray(new String[userList.size()]);
         serverUI.getLtUser().setModel(new javax.swing.AbstractListModel<String>() {
             public int getSize() {
@@ -122,6 +123,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
                 return strings[i];
             }
         });
+*/
 
         String jsonList = JacksonUtil.toJson(userList);
         broadcast(jsonList, 0);
