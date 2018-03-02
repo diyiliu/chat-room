@@ -110,35 +110,44 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
      * @param msg
      */
     private void refreshHistoryMsg(ClientMsg msg) {
-        ClientMsg lastMsg = Constant.MSG_LINKED_DEQUE.peek();
-
-        // 100 条消息记录
-        Constant.MSG_LINKED_DEQUE.add(msg);
-        if (Constant.MSG_LINKED_DEQUE.size() > 100) {
-            Constant.MSG_LINKED_DEQUE.poll();
+        ClientMsg lastMsg;
+        if (Constant.MSG_LINKED_DEQUE.isEmpty()){
+            lastMsg = msg;
+        }else {
+            lastMsg = Constant.MSG_LINKED_DEQUE.getLast();
         }
 
-        JTextPane textPane = clientUI.getTpContent();
+        // 加锁
+        synchronized (lastMsg){
+            // 100 条消息记录
+            Constant.MSG_LINKED_DEQUE.add(msg);
+            if (Constant.MSG_LINKED_DEQUE.size() > 100) {
+                Constant.MSG_LINKED_DEQUE.poll();
+            }
 
-        try {
-            if (lastMsg != null) {
-                if (msg.getDatetime() - lastMsg.getDatetime() > 60 * 1000) {
-                    Date date = new Date(msg.getDatetime());
-                    showContent(textPane, DateUtil.dateToString(date, "%1$tH:%1$tM:%1$tS"),
-                            Color.GRAY, 14, StyleConstants.ALIGN_CENTER, 0);
+            JTextPane textPane = clientUI.getTpContent();
+
+            try {
+                if (lastMsg != null) {
+                    if (msg.getDatetime() - lastMsg.getDatetime() > 60 * 1000) {
+                        Date date = new Date(msg.getDatetime());
+                        showContent(textPane, DateUtil.dateToString(date, "%1$tH:%1$tM:%1$tS"),
+                                Color.GRAY, 14, StyleConstants.ALIGN_CENTER, 0);
+                    }
                 }
-            }
 
-            if (msg.getUser().equals(account)) {
-                showContent(textPane, msg.getUser(), Color.GRAY, 14, StyleConstants.ALIGN_RIGHT, 0);
-                showContent(textPane, msg.getContent(), Color.ORANGE, 16, StyleConstants.ALIGN_RIGHT, 20);
-            } else {
-                showContent(textPane, msg.getUser(), Color.GRAY, 14, StyleConstants.ALIGN_LEFT, 0);
-                showContent(textPane, msg.getContent(), Color.DARK_GRAY, 16, StyleConstants.ALIGN_LEFT, 20);
+                if (msg.getUser().equals(account)) {
+                    showContent(textPane, msg.getUser(), Color.GRAY, 14, StyleConstants.ALIGN_RIGHT, 0);
+                    showContent(textPane, msg.getContent(), Color.ORANGE, 16, StyleConstants.ALIGN_RIGHT, 20);
+                } else {
+                    showContent(textPane, msg.getUser(), Color.GRAY, 14, StyleConstants.ALIGN_LEFT, 0);
+                    showContent(textPane, msg.getContent(), Color.DARK_GRAY, 16, StyleConstants.ALIGN_LEFT, 20);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+
     }
 
     private void showContent(JTextPane textPane, String msg, Color color,
