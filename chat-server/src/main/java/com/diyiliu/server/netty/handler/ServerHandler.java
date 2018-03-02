@@ -60,19 +60,24 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
+        String host = ctx.channel().remoteAddress().toString().trim().replaceFirst("/", "");
         String content = (String) msg;
 
         // 客户端注册
         if (content.startsWith("[user]^") && content.endsWith("$")) {
-            String[] strArr = content.split("\\^");
-            String user = strArr[1].replace("$", "");
-
-            String host = ctx.channel().remoteAddress().toString().trim().replaceFirst("/", "");
-            join(host, user);
-
+            // 加入用户列表
+            join(host, washMsg(content));
             return;
         }
 
+        // 客户端消息
+        if (content.startsWith("[message]^") && content.endsWith("$")) {
+            ClientPipeline pipeline = (ClientPipeline) onlineCacheProvider.get(host);
+            String user = pipeline.getUser();
+
+            content = user + "~" + washMsg(content);
+            broadcast(content, 1);
+        }
     }
 
     @Override
@@ -81,13 +86,24 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         cause.printStackTrace();
     }
 
+    /**
+     * 清洗数据格式
+     *
+     * @param str
+     * @return
+     */
+    public String washMsg(String str) {
+        String[] strArr = str.split("\\^");
+
+        return strArr[1].replace("$", "");
+    }
+
     private void refreshUserList() {
         Set userSet = onlineCacheProvider.getKeys();
-
         List<ClientPipeline> list = new ArrayList();
         userSet.forEach(e -> {
             ClientPipeline pipeline = (ClientPipeline) onlineCacheProvider.get(e);
-            if (pipeline.isOnline()){
+            if (pipeline.isOnline()) {
                 list.add(pipeline);
             }
         });
@@ -108,19 +124,38 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         });
 
         String jsonList = JacksonUtil.toJson(userList);
-        String msg = "[list]^" + jsonList + "$" + System.lineSeparator();
+        broadcast(jsonList, 0);
+    }
 
+    public void broadcast(String message, int type) {
+        Set userSet = onlineCacheProvider.getKeys();
+
+        switch (type) {
+            case 0:
+
+                message = "[list]^" + message;
+                break;
+            case 1:
+
+                message = "[message]^" + message;
+                break;
+            default:
+        }
+
+        String msg = message + "$" + System.lineSeparator();
         userSet.forEach(e -> {
             ClientPipeline pipeline = (ClientPipeline) onlineCacheProvider.get(e);
-            if (pipeline.isOnline()){
+            if (pipeline.isOnline()) {
+
                 ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes());
                 pipeline.getContext().writeAndFlush(byteBuf);
 
-                logger.info("广播列表[{}:{}]", e, jsonList);
+                logger.info("广播消息[{}:{}]", e, "...");
             }else {
                 logger.warn("[{}]未注册!", e);
             }
         });
+
     }
 
     /**

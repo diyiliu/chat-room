@@ -572,6 +572,5 @@ public class CommonUtil {
             strLen = str.length();
         }
         return str;
-
     }
 }

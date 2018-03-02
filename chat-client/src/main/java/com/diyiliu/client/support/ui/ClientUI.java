@@ -1,6 +1,10 @@
 package com.diyiliu.client.support.ui;
 
 import com.diyiliu.common.util.UIHepler;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelHandlerContext;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.swing.*;
@@ -14,7 +18,7 @@ import javax.swing.*;
 @Component
 public class ClientUI extends javax.swing.JFrame {
 
-    private String account;
+    private ChannelHandlerContext  context;
 
     /**
      * Creates new form ClientUI
@@ -27,8 +31,6 @@ public class ClientUI extends javax.swing.JFrame {
     }
 
     public ClientUI(String account) {
-        this.account = account;
-
         UIHepler.beautify("Nimbus");
         initComponents();
 
@@ -49,8 +51,8 @@ public class ClientUI extends javax.swing.JFrame {
         sclPnUser = new javax.swing.JScrollPane();
         ltUser = new javax.swing.JList<>();
         sclPnContent = new javax.swing.JScrollPane();
-        taContent = new javax.swing.JTextArea();
-        pnInput = new javax.swing.JPanel();
+        sclPnInput = new javax.swing.JScrollPane();
+        tpContent = new javax.swing.JTextPane();
         taInput = new javax.swing.JTextArea();
         btnSend = new javax.swing.JButton();
         lbAccount = new javax.swing.JLabel();
@@ -64,41 +66,41 @@ public class ClientUI extends javax.swing.JFrame {
         ltUser.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         ltUser.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = {};
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+
+            public int getSize() {
+                return strings.length;
+            }
+
+            public String getElementAt(int i) {
+                return strings[i];
+            }
         });
         sclPnUser.setViewportView(ltUser);
 
         sclPnContent.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         sclPnContent.setHorizontalScrollBar(null);
+        sclPnContent.setViewportView(tpContent);
 
-        taContent.setColumns(20);
-        taContent.setRows(5);
-        taContent.setText("\n");
-        taContent.setEnabled(false);
-        sclPnContent.setViewportView(taContent);
-
-        pnInput.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        sclPnInput.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        sclPnInput.setHorizontalScrollBar(null);
 
         taInput.setColumns(20);
         taInput.setRows(5);
-
-        javax.swing.GroupLayout pnInputLayout = new javax.swing.GroupLayout(pnInput);
-        pnInput.setLayout(pnInputLayout);
-        pnInputLayout.setHorizontalGroup(
-                pnInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(taInput)
-        );
-        pnInputLayout.setVerticalGroup(
-                pnInputLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(pnInputLayout.createSequentialGroup()
-                                .addGap(0, 1, Short.MAX_VALUE)
-                                .addComponent(taInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 1, Short.MAX_VALUE))
-        );
+        sclPnInput.setViewportView(taInput);
+        // 自动换行
+        taInput.setLineWrap(true);
+        taInput.setWrapStyleWord(true);
 
         btnSend.setText("发送");
         btnSend.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSend.addActionListener((actionEvent) -> {
+            String text = taInput.getText().trim();
+            if (StringUtils.isNotBlank(text)){
+                // 发送数据
+                sendToServer(text);
+                taInput.setText("");
+            }
+        });
 
         javax.swing.GroupLayout pnMainLayout = new javax.swing.GroupLayout(pnMain);
         pnMain.setLayout(pnMainLayout);
@@ -108,21 +110,21 @@ public class ClientUI extends javax.swing.JFrame {
                                 .addComponent(sclPnUser, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(sclPnContent, javax.swing.GroupLayout.PREFERRED_SIZE, 437, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(pnInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(sclPnContent)
                                         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnMainLayout.createSequentialGroup()
                                                 .addComponent(lbAccount)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(btnSend)))
+                                                .addComponent(btnSend))
+                                        .addComponent(sclPnInput, javax.swing.GroupLayout.DEFAULT_SIZE, 437, Short.MAX_VALUE))
                                 .addContainerGap())
         );
         pnMainLayout.setVerticalGroup(
                 pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addComponent(sclPnUser)
                         .addGroup(pnMainLayout.createSequentialGroup()
-                                .addComponent(sclPnContent, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(sclPnContent, javax.swing.GroupLayout.DEFAULT_SIZE, 275, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(pnInput, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(sclPnInput, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(pnMainLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                         .addComponent(btnSend)
@@ -189,14 +191,17 @@ public class ClientUI extends javax.swing.JFrame {
     private javax.swing.JButton btnSend;
     private javax.swing.JLabel lbAccount;
     private javax.swing.JList<String> ltUser;
-    private javax.swing.JPanel pnInput;
     private javax.swing.JPanel pnMain;
-    private javax.swing.JScrollPane sclPnContent;
     private javax.swing.JScrollPane sclPnUser;
-    private javax.swing.JTextArea taContent;
+    private javax.swing.JScrollPane sclPnContent;
+    private javax.swing.JScrollPane sclPnInput;
     private javax.swing.JTextArea taInput;
+    private javax.swing.JTextPane tpContent;
     // End of variables declaration
 
+    public void setContext(ChannelHandlerContext context) {
+        this.context = context;
+    }
 
     public JList<String> getLtUser() {
         return ltUser;
@@ -204,5 +209,25 @@ public class ClientUI extends javax.swing.JFrame {
 
     public JLabel getLbAccount() {
         return lbAccount;
+    }
+
+    public JTextPane getTpContent() {
+        return tpContent;
+    }
+
+    public JScrollPane getSclPnContent() {
+        return sclPnContent;
+    }
+
+    /**
+     * 发送数据到服务器
+     *
+     * @param message
+     */
+    public void sendToServer(String message){
+        String msg = "[message]^" + message + "$" + System.lineSeparator();
+        ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes());
+
+        context.writeAndFlush(byteBuf);
     }
 }
