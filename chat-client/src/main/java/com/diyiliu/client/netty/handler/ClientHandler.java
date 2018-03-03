@@ -18,6 +18,7 @@ import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
+import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         this.context = ctx;
 
         String msg = "[user]^" + account + "$" + System.lineSeparator();
-        ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes());
+        ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes(Charset.forName("UTF-8")));
         ctx.writeAndFlush(byteBuf);
     }
 

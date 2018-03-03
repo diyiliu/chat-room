@@ -14,6 +14,7 @@ import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.InlineView;
 import javax.swing.text.html.ParagraphView;
+import java.nio.charset.Charset;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -286,7 +287,7 @@ public class ClientUI extends javax.swing.JFrame {
      */
     public void sendToServer(String message) {
         String msg = "[message]^" + message + "$" + System.lineSeparator();
-        ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes());
+        ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes(Charset.forName("UTF-8")));
 
         context.writeAndFlush(byteBuf);
     }

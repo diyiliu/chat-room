@@ -13,6 +13,7 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -150,7 +151,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             ClientPipeline pipeline = (ClientPipeline) onlineCacheProvider.get(e);
             if (pipeline.isOnline()) {
 
-                ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes());
+                ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes(Charset.forName("UTF-8")));
                 pipeline.getContext().writeAndFlush(byteBuf);
 
                 logger.info("广播消息[{}:{}]", e, content);
