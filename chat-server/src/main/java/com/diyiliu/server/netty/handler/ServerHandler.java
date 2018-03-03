@@ -8,6 +8,7 @@ import com.diyiliu.server.support.ui.ServerUI;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,8 +74,11 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
             ClientPipeline pipeline = (ClientPipeline) onlineCacheProvider.get(host);
             String user = pipeline.getUser();
 
-            content = user + "~" + washMsg(content);
-            broadcast(content, 1);
+            String message = washMsg(content);
+            if (StringUtils.isNotBlank(message)){
+                content = user + "~" + message;
+                broadcast(content, 1);
+            }
         }
     }
 
@@ -93,7 +97,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
     public String washMsg(String str) {
         String[] strArr = str.split("\\^");
 
-        return strArr[1].replace("$", "");
+        return strArr[1].replace("$", "").trim();
     }
 
     private void refreshUserList() {
