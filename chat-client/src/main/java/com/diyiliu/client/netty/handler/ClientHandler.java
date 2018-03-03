@@ -5,8 +5,6 @@ import com.diyiliu.client.support.model.ClientMsg;
 import com.diyiliu.client.support.ui.ClientUI;
 import com.diyiliu.common.util.DateUtil;
 import com.diyiliu.common.util.JacksonUtil;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
@@ -18,7 +16,6 @@ import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import java.awt.*;
-import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.List;
 
@@ -46,8 +43,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         this.context = ctx;
 
         String msg = "[user]^" + account + "$" + System.lineSeparator();
-        ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes(Charset.forName("UTF-8")));
-        ctx.writeAndFlush(byteBuf);
+        ctx.writeAndFlush(msg);
     }
 
 

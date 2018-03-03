@@ -1,8 +1,6 @@
 package com.diyiliu.client.support.ui;
 
 import com.diyiliu.common.util.UIHepler;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -14,9 +12,6 @@ import javax.swing.text.ViewFactory;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.InlineView;
 import javax.swing.text.html.ParagraphView;
-import java.nio.charset.Charset;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Description: ClientUI
@@ -287,8 +282,7 @@ public class ClientUI extends javax.swing.JFrame {
      */
     public void sendToServer(String message) {
         String msg = "[message]^" + message + "$" + System.lineSeparator();
-        ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes(Charset.forName("UTF-8")));
 
-        context.writeAndFlush(byteBuf);
+        context.writeAndFlush(msg);
     }
 }

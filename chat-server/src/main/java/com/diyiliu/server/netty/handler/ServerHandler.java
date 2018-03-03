@@ -5,15 +5,12 @@ import com.diyiliu.common.util.JacksonUtil;
 import com.diyiliu.common.util.SpringUtil;
 import com.diyiliu.server.support.model.ClientPipeline;
 import com.diyiliu.server.support.ui.ServerUI;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -150,9 +147,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         userSet.forEach(e -> {
             ClientPipeline pipeline = (ClientPipeline) onlineCacheProvider.get(e);
             if (pipeline.isOnline()) {
-
-                ByteBuf byteBuf = Unpooled.copiedBuffer(msg.getBytes(Charset.forName("UTF-8")));
-                pipeline.getContext().writeAndFlush(byteBuf);
+                pipeline.getContext().writeAndFlush(msg);
 
                 logger.info("广播消息[{}:{}]", e, content);
             }else {

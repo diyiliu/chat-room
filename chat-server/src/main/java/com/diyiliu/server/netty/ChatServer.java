@@ -12,6 +12,9 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
+
+import java.nio.charset.Charset;
 
 /**
  * Description: ChatServer
@@ -41,8 +44,9 @@ public class ChatServer extends ChannelThread {
                         @Override
                         protected void initChannel(SocketChannel ch) {
 
-                            ch.pipeline().addLast(new LineBasedFrameDecoder(1024))
-                                    .addLast(new StringDecoder())
+                            ch.pipeline().addLast(new StringEncoder(Charset.forName("UTF-8")))
+                                    .addLast(new LineBasedFrameDecoder(1024))
+                                    .addLast(new StringDecoder(Charset.forName("UTF-8")))
                                     .addLast(new ServerHandler(serverUI));
                         }
                     });

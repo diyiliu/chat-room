@@ -7,13 +7,17 @@ import com.diyiliu.common.thread.ChannelThread;
 import com.diyiliu.common.util.SpringUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LineBasedFrameDecoder;
 import io.netty.handler.codec.string.StringDecoder;
+import io.netty.handler.codec.string.StringEncoder;
 import io.netty.handler.timeout.IdleStateHandler;
+
+import java.nio.charset.Charset;
 
 /**
  * Description: ChatClient
@@ -55,12 +59,13 @@ public class ChatClient extends ChannelThread {
         clientHandler = new ClientHandler(account, clientUI);
         bootstrap.group(group)
                 .channel(NioSocketChannel.class)
-                //.option(ChannelOption.TCP_NODELAY, true)
+                .option(ChannelOption.TCP_NODELAY, true)
                 .handler(new ChannelInitializer<SocketChannel>() {
                     @Override
                     protected void initChannel(SocketChannel ch) {
-                        ch.pipeline().addLast(new LineBasedFrameDecoder(1024))
-                                .addLast(new StringDecoder())
+                        ch.pipeline().addLast(new StringEncoder(Charset.forName("UTF-8")))
+                                .addLast(new LineBasedFrameDecoder(1024))
+                                .addLast(new StringDecoder(Charset.forName("UTF-8")))
                                 .addLast(new IdleStateHandler(0, 40, 0))
                                 .addLast(clientHandler);
                     }

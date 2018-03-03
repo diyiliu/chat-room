@@ -14,32 +14,43 @@ dependencies {
     compile project(':chat-common')
 }
 
+
+// 打包jar 主函数
 jar {
-    archiveName = 'serverApp.jar'
+    archiveName = 'chat-server.jar'
+
     manifest {
         attributes(
-                'Main-Class': 'com.diyiliu.server.ServerApp',
-                'Class-Path': 'config/ lib/' + configurations.compile.collect { it.name }.join(' lib/')
+                'Main-Class': 'com.diyiliu.server.ServerApp'
         )
     }
 
-    // 过滤所有配置文件(打包时取消注释)
-//    sourceSets {
-//        main {
-//            resources {
-//                exclude '*.*'
-//                exclude '**/'
-//            }
-//        }
-//    }
-}
-
-// 拷贝文件
-task copyJars(type: Copy) {
-    from configurations.runtime
-    into "$buildDir/libs/lib"
+    // '胖'打包（包含所有jar）
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
 }
 
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
+}
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.github.jengelman.gradle.plugins:shadow:2.0.2'
+    }
+}
+
+apply plugin: 'com.github.johnrengelman.shadow'
+
+shadowJar {
+    baseName = 'chat-server'
+    classifier = null
+    version = null
+    mergeServiceFiles('META-INF/spring.*')
 }
