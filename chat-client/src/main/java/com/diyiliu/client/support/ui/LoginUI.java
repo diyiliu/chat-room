@@ -4,6 +4,7 @@ import com.diyiliu.client.netty.ChatClient;
 import com.diyiliu.common.util.UIHepler;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class LoginUI extends javax.swing.JFrame {
@@ -41,6 +42,9 @@ public class LoginUI extends javax.swing.JFrame {
 
         setTitle("登录主机");
         setResizable(false);
+
+        ImageIcon icon = new ImageIcon(ClassLoader.getSystemResource("image/chat_128.png"));
+        setIconImage(icon.getImage());
 
         pnMain.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
 

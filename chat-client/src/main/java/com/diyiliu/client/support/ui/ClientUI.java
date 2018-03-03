@@ -60,6 +60,9 @@ public class ClientUI extends javax.swing.JFrame {
         setTitle("客户端");
         setResizable(false);
 
+        ImageIcon icon = new ImageIcon(ClassLoader.getSystemResource("image/chat_128.png"));
+        setIconImage(icon.getImage());
+
         sclPnUser.setBorder(null);
 
         ltUser.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
