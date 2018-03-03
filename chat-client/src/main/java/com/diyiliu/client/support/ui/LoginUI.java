@@ -31,8 +31,8 @@ public class LoginUI extends javax.swing.JFrame {
         lbHost = new javax.swing.JLabel();
         lbPort = new javax.swing.JLabel();
         lbAccount = new javax.swing.JLabel();
-        tfHost = new javax.swing.JTextField("127.0.0.1");
-        tfPort = new javax.swing.JTextField("8888");
+        tfHost = new javax.swing.JTextField("diyiliu.cc");
+        tfPort = new javax.swing.JTextField("6600");
         tfAccount = new javax.swing.JTextField();
         lbTitle = new javax.swing.JLabel();
         btnLogin = new javax.swing.JButton();

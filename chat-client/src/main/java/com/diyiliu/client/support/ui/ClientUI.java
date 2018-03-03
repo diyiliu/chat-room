@@ -88,7 +88,7 @@ public class ClientUI extends javax.swing.JFrame {
         sclPnInput.setHorizontalScrollBar(null);
 
         taInput.setColumns(20);
-        taInput.setRows(5);
+        taInput.setRows(4);
         sclPnInput.setViewportView(taInput);
         // 自动换行
         taInput.setLineWrap(true);
