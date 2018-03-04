@@ -102,7 +102,11 @@ public class ClientUI extends javax.swing.JFrame {
                 String[] lines = text.split("\\r?\\n");
                 // 发送数据
                 for (String l: lines){
-                    sendToServer(l);
+                    String msg = l.trim();
+                    // 过滤空数据内容
+                    if (StringUtils.isNotBlank(msg)){
+                        sendToServer(msg);
+                    }
                 }
                 taInput.setText("");
             }
