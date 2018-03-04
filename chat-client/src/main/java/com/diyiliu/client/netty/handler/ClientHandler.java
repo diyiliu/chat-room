@@ -49,6 +49,10 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        if(clientUI == null || !clientUI.isVisible()){
+            ctx.close();
+        }
+
         String content = (String) msg;
 
         // 客户端列表
@@ -79,6 +83,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         logger.error("客户端异常[{}]!", cause.getMessage());
         cause.printStackTrace();
+        ctx.close();
     }
 
     /**
