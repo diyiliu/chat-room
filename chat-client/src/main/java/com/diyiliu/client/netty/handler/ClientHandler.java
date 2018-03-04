@@ -117,13 +117,12 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         // 加锁
         synchronized (lastMsg){
             // 100 条消息记录
-            Constant.MSG_LINKED_DEQUE.add(msg);
             if (Constant.MSG_LINKED_DEQUE.size() > 100) {
                 Constant.MSG_LINKED_DEQUE.poll();
             }
+            Constant.MSG_LINKED_DEQUE.add(msg);
 
             JTextPane textPane = clientUI.getTpContent();
-
             try {
                 if (lastMsg != null) {
                     if (msg.getDatetime() - lastMsg.getDatetime() > 60 * 1000) {

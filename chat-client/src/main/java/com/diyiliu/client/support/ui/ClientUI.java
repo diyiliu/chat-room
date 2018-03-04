@@ -79,6 +79,7 @@ public class ClientUI extends javax.swing.JFrame {
         });
         sclPnUser.setViewportView(ltUser);
 
+        tpContent.setEditable(false);
         sclPnContent.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
         sclPnContent.setHorizontalScrollBar(null);
         sclPnContent.setViewportView(tpContent);
