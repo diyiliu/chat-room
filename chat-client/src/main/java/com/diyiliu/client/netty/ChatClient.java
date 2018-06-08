@@ -72,8 +72,8 @@ public class ChatClient extends ChannelThread {
                 });
 
         try {
-            future = bootstrap.connect(host, port).sync();
-            refreshUI();
+            future = bootstrap.connect(host, port)
+                    .addListener(future1 -> refreshUI()).sync();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
