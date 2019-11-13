@@ -1,0 +1,6 @@
+FROM java:8
+WORKDIR /opt
+ARG PRJECT_BUILD_JAR
+COPY ${PRJECT_BUILD_JAR} ./
+EXPOSE 6600
+ENTRYPOINT ["java","-jar","chat-server.jar"]
