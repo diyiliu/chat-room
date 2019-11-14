@@ -57,7 +57,7 @@ shadowJar {
 }
 
 task buildDocker(type: Docker, dependsOn: shadowJar) {
-    push = false
+    push = true
     applicationName = jar.baseName
     dockerfile = file('./Dockerfile')
     doFirst {
