@@ -2,18 +2,18 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-client.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-client.iml" group="chat-client" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-client/chat-client_main.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-client/chat-client_main.iml" group="chat-client" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-client/chat-client_test.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-client/chat-client_test.iml" group="chat-client" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-common.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-common.iml" group="chat-common" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-common/chat-common_main.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-common/chat-common_main.iml" group="chat-common" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-common/chat-common_test.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-common/chat-common_test.iml" group="chat-common" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-room.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-room.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-room_main.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-room_main.iml" group="chat-room" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-room_test.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-room_test.iml" group="chat-room" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-server.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-server.iml" group="chat-server" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-server/chat-server_main.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-server/chat-server_main.iml" group="chat-server" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-server/chat-server_test.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-server/chat-server_test.iml" group="chat-server" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-client/chat-room.chat-client.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-client/chat-room.chat-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-client/chat-room.chat-client.main.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-client/chat-room.chat-client.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-client/chat-room.chat-client.test.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-client/chat-room.chat-client.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-common/chat-room.chat-common.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-common/chat-room.chat-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-common/chat-room.chat-common.main.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-common/chat-room.chat-common.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-common/chat-room.chat-common.test.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-common/chat-room.chat-common.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-server/chat-room.chat-server.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-server/chat-room.chat-server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-server/chat-room.chat-server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-server/chat-room.chat-server.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-server/chat-room.chat-server.test.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-server/chat-room.chat-server.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-room.main.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-room.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/chat-room.test.iml" filepath="$PROJECT_DIR$/.idea/modules/chat-room.test.iml" />
     </modules>
   </component>
 </project>

@@ -2,14 +2,17 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="chat-client_main" target="1.8" />
-      <module name="chat-client_test" target="1.8" />
-      <module name="chat-common_main" target="1.8" />
-      <module name="chat-common_test" target="1.8" />
-      <module name="chat-room_main" target="1.8" />
-      <module name="chat-room_test" target="1.8" />
-      <module name="chat-server_main" target="1.8" />
-      <module name="chat-server_test" target="1.8" />
+      <module name="chat-room.chat-client.main" target="1.8" />
+      <module name="chat-room.chat-client.test" target="1.8" />
+      <module name="chat-room.chat-common.main" target="1.8" />
+      <module name="chat-room.chat-common.test" target="1.8" />
+      <module name="chat-room.chat-server.main" target="1.8" />
+      <module name="chat-room.chat-server.test" target="1.8" />
+      <module name="chat-room.main" target="1.8" />
+      <module name="chat-room.test" target="1.8" />
     </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_STRING" value="-encoding utf-8" />
   </component>
 </project>

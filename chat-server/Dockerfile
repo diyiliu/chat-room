@@ -3,4 +3,4 @@ WORKDIR /opt
 VOLUME /tmp
 ADD chat-server.jar app.jar
 EXPOSE 6600
-ENTRYPOINT ["java","-jar","chat-server.jar"]
+ENTRYPOINT ["java","-jar","app.jar"]

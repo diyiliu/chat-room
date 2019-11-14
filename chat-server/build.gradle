@@ -16,7 +16,6 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
-
 // 打包jar 主函数
 jar {
     archiveName = 'chat-server.jar'
@@ -41,7 +40,7 @@ task buildDocker(type: Docker, dependsOn: build) {
     dockerfile = file('./Dockerfile')
     doFirst {
         copy {
-            from jar
+            from shadowJar
             into stageDir
         }
     }
