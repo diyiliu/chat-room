@@ -3,6 +3,7 @@ version '1.0'
 
 apply plugin: 'java'
 apply plugin: 'docker'
+apply plugin: 'com.github.johnrengelman.shadow'
 
 sourceCompatibility = 1.8
 
@@ -34,18 +35,6 @@ jar {
     }
 }
 
-task buildDocker(type: Docker, dependsOn: build) {
-    push = true
-    applicationName = jar.baseName
-    dockerfile = file('./Dockerfile')
-    doFirst {
-        copy {
-            from shadowJar
-            into stageDir
-        }
-    }
-}
-
 tasks.withType(JavaCompile) {
     options.encoding = "UTF-8"
 }
@@ -60,11 +49,21 @@ buildscript {
     }
 }
 
-apply plugin: 'com.github.johnrengelman.shadow'
-
 shadowJar {
     baseName = 'chat-server'
     classifier = null
     version = null
     mergeServiceFiles('META-INF/spring.*')
+}
+
+task buildDocker(type: Docker, dependsOn: shadowJar) {
+    push = true
+    applicationName = jar.baseName
+    dockerfile = file('./Dockerfile')
+    doFirst {
+        copy {
+            from jar
+            into stageDir
+        }
+    }
 }
