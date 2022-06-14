@@ -1,6 +1,7 @@
 package com.diyiliu.client.support.ui;
 
 import com.diyiliu.common.util.UIHepler;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
@@ -22,7 +23,7 @@ import javax.swing.text.html.ParagraphView;
 @Component
 public class ClientUI extends javax.swing.JFrame {
 
-    private ChannelHandlerContext context;
+    private Channel channel;
 
     /**
      * Creates new form ClientUI
@@ -35,6 +36,10 @@ public class ClientUI extends javax.swing.JFrame {
         fixEnLineBreak();
 
         UIHepler.setCenter(this);
+    }
+
+    public void setChannel(Channel channel) {
+        this.channel = channel;
     }
 
     /**
@@ -209,9 +214,6 @@ public class ClientUI extends javax.swing.JFrame {
     private javax.swing.JTextPane tpContent;
     // End of variables declaration
 
-    public void setContext(ChannelHandlerContext context) {
-        this.context = context;
-    }
 
     public JList<String> getLtUser() {
         return ltUser;
@@ -291,6 +293,6 @@ public class ClientUI extends javax.swing.JFrame {
     public void sendToServer(String message) {
         String msg = "[message]^" + message + "$" + System.lineSeparator();
 
-        context.writeAndFlush(msg);
+        channel.writeAndFlush(msg);
     }
 }

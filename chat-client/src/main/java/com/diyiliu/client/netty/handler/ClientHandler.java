@@ -30,7 +30,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     private String account;
     private ClientUI clientUI;
 
-    private ChannelHandlerContext context;
 
     public ClientHandler(String account, ClientUI clientUI) {
         this.account = account;
@@ -40,7 +39,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
         logger.info("已连接服务器...");
-        this.context = ctx;
 
         String msg = "[user]^" + account + "$" + System.lineSeparator();
         ctx.writeAndFlush(msg);
@@ -186,9 +184,5 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         String[] strArr = str.split("\\^");
 
         return strArr[1].replace("$", "");
-    }
-
-    public ChannelHandlerContext getContext() {
-        return context;
     }
 }

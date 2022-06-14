@@ -51,7 +51,7 @@ public class ChatServer extends ChannelThread {
                         }
                     });
 
-            future = b.bind(port).sync();
+            future = b.bind("127.0.0.1", port).sync();
 
             logger.info("服务器启动[{}]...", port);
             future.channel().closeFuture().sync();

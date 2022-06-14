@@ -6,9 +6,7 @@ import com.diyiliu.client.support.ui.LoginUI;
 import com.diyiliu.common.thread.ChannelThread;
 import com.diyiliu.common.util.SpringUtil;
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -73,7 +71,7 @@ public class ChatClient extends ChannelThread {
 
         try {
             future = bootstrap.connect(host, port)
-                    .addListener(future1 -> refreshUI()).sync();
+                    .addListener(f -> refreshUI()).sync();
             future.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -123,7 +121,7 @@ public class ChatClient extends ChannelThread {
 
         clientUI.getLbAccount().setText(account);
         clientUI.setVisible(true);
-        clientUI.setContext(clientHandler.getContext());
+        clientUI.setChannel(future.channel());
 
         if (loginUI.isShowing()){
             loginUI.setVisible(false);
